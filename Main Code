@@ -1,0 +1,65 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Define fictional fund data (returns and benchmark)
+fund_1_returns = np.random.normal(loc=0.10, scale=0.05, size=10)  # Active return with high risk (lumpy)
+fund_2_returns = np.random.normal(loc=0.08, scale=0.03, size=10)  # Active return with low risk (smooth)
+benchmark_returns = np.random.normal(loc=0.07, scale=0.02, size=10)
+
+# Calculate active risk and active return
+active_risk_1 = np.std(fund_1_returns - benchmark_returns)
+active_risk_2 = np.std(fund_2_returns - benchmark_returns)
+active_return_1 = np.mean(fund_1_returns - benchmark_returns)
+active_return_2 = np.mean(fund_2_returns - benchmark_returns)
+
+# Information Ratio
+information_ratio_1 = active_return_1 / active_risk_1
+information_ratio_2 = active_return_2 / active_risk_2
+
+# Create subplots (3 rows, 1 column)
+plt.figure(figsize=(12, 9))
+
+# **Chart 1: Fund Returns**
+plt.subplot(3, 1, 1)
+plt.plot(fund_1_returns, color='orange', label='Fund 1 (Lumpy)')
+plt.plot(fund_2_returns, color='royalblue', label='Fund 2 (Smooth)')
+plt.xlabel('Period')
+plt.ylabel('Return')
+plt.title('Fund Returns')
+plt.legend()
+plt.grid(True)
+
+# **Chart 2: Fund Risks**
+plt.subplot(3, 1, 2)
+plt.axhline(y=active_risk_1, color='orange', linestyle='--', label=f'Fund 1 Risk ({active_risk_1:.2f})')
+plt.axhline(y=active_risk_2, color='royalblue', linestyle='--', label=f'Fund 2 Risk ({active_risk_2:.2f})')
+plt.xlabel('Period')
+plt.ylabel('Risk')
+plt.title('Fund Risks')
+plt.legend()
+plt.grid(True)
+
+# **Chart 3: Active Risk vs Active Return (already created in previous code)**
+plt.subplot(3, 1, 3)  # Reuse the existing code for this chart
+# Scatter plot for active risk vs. active return
+plt.scatter(x=[active_risk_1, active_risk_2], y=[active_return_1, active_return_2], c='blue', marker='o', label='Funds')
+
+# Reference line for zero active return
+plt.axhline(y=0, color='gray', linestyle='--', label='Zero Active Return')
+
+# Labels and title
+plt.xlabel('Active Risk (Standard Deviation)')
+plt.ylabel('Active Return (Average)')
+plt.title('Active Risk vs. Active Return (Information Ratio)')
+
+# Annotate information ratio for each fund
+for i, (x, y, info_ratio) in enumerate(zip([active_risk_1, active_risk_2], [active_return_1, active_return_2], [information_ratio_1, information_ratio_2])):
+  plt.annotate(f"Fund {i+1} (IR: {info_ratio:.2f})", (x, y), textcoords="offset points", xytext=(0, 10), ha='center')
+
+
+
+# Adjust layout
+plt.tight_layout()
+
+# Show the plot
+plt.show()
